@@ -15,7 +15,7 @@ path.append("\\packages")
 def main(log):
 
     log.debug("main started")
-    Controller(initLogger("control")).start()
+    Controller().start()
 
 
 # Run as the main only

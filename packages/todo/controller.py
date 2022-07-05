@@ -5,7 +5,7 @@ from packages.todo.task_service import TaskService
 
 
 class Controller:
-    def __init__(self, log: Logger) -> None:
+    def __init__(self, log: Logger = initLogger("control")) -> None:
         self.__log = log
 
     def start(self):
