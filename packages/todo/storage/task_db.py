@@ -1,5 +1,5 @@
 from packages.todo.storage.task_storage import TaskStorage
-from packages.todo.task_bo import TaskBo
+from packages.todo.storage.task_bo import TaskBo
 import sqlite3
 from definitions import getFullFileName, SOURCE_DIR
 from packages.logger.logger import Logger

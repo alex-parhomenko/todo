@@ -1,7 +1,7 @@
 from typing import List
 from packages.todo.action import Action
 from packages.todo.task import Task
-from packages.todo.task_bo import TaskBo
+from packages.todo.storage.task_bo import TaskBo
 
 
 class TaskView:

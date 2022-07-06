@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from packages.todo.task_bo import TaskBo
+from packages.todo.storage.task_bo import TaskBo
 
 
 class TaskStorageException(Exception):

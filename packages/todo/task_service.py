@@ -10,7 +10,7 @@ from packages.todo.storage.task_storage \
     import TaskStorage, TaskStorageException
 # fmt: on
 from packages.todo.task import Task
-from packages.todo.task_bo import TaskBo
+from packages.todo.storage.task_bo import TaskBo
 from packages.todo.task_view import TaskView
 from packages.todo.storage.task_db import TaskDb
 from packages.todo.storage.task_json import TaskJson

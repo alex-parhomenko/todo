@@ -3,4 +3,18 @@
 
 TODO application for PY training
 
-Run 'json-server --watch todo.json' for JSON web-storage using
+JSON web-storage requests __json-server__
+Run the server by the following: 
+```
+json-server --watch todo.json
+```
+
+Sample of todo.json:
+```
+{
+  "todo_list": []
+}
+```
+
+- **Source code:** https://github.com/alex-parhomenko/todo.git
+

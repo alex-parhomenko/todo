@@ -1,11 +1,10 @@
 # fmt: off
 from packages.todo.storage.task_storage \
     import TaskStorage, TaskStorageException
-from packages.todo.task_bo \
+from packages.todo.storage.task_bo \
     import TaskBo, TaskDecoder, TaskEncoder
 # fmt: on
 import json
-from packages.logger.logger import Logger
 import requests
 
 
@@ -16,15 +15,15 @@ class TaskJson(TaskStorage):
 
     def __init__(self, log, url, json_root) -> None:
         """Initialization."""
-        self.__log: Logger = log
-
+        self.__log = log
         self.__resource_url = self.__defineResourceUrl(url, json_root)
 
-    def add(self, task: TaskBo) -> None:
+    def add(self, task: TaskBo) -> bool:
         """Add a new task."""
 
         msg = "new task "
         response = None
+        result = False
         try:
             task.id = None
             response = requests.post(
@@ -37,15 +36,18 @@ class TaskJson(TaskStorage):
         else:
             msg = self.__getReponseMsg(msg, response)
             if response.status_code == requests.codes.created:
+                result = True
                 self.__log.debug(msg)
             else:
                 self.__log.error(msg)
+        return result
 
-    def update_by_id(self, task: TaskBo) -> None:
+    def update_by_id(self, task: TaskBo) -> bool:
         """Update a task by its ID"""
 
         msg = f"Update task by id {task.id} "
         response = None
+        result = False
         try:
             response = requests.put(
                 f"{self.__resource_url}/{task.id}",
@@ -58,10 +60,12 @@ class TaskJson(TaskStorage):
             msg = self.__getReponseMsg(msg, response)
             if response.status_code == requests.codes.ok:
                 self.__log.info(msg)
+                result = True
             else:
                 self.__log.error(msg)
 
         self.__log.info(f"task {task.id} has got priority {task.priority}")
+        return result
 
     def fetch_all(self) -> list[TaskBo]:
         """Get all rows"""
@@ -108,9 +112,10 @@ class TaskJson(TaskStorage):
                 self.__log.error(msg)
         return res
 
-    def delete_by_id(self, id: int) -> None:
+    def delete_by_id(self, id: int) -> bool:
         """Delete a task by ID"""
         msg = f"delete task {id}"
+        result = False
         try:
             response = requests.delete(
                 f"{self.__resource_url}/{id}",
@@ -121,9 +126,11 @@ class TaskJson(TaskStorage):
         else:
             if response.status_code == requests.codes.ok:
                 self.__log.info(msg + " - DONE")
+                result = True
             else:
                 msg = self.__getReponseMsg(msg, response)
                 self.__log.error(msg)
+        return result
 
     def __getReponseMsg(self, subj: str, resp):
         # fmt: off
@@ -135,7 +142,7 @@ class TaskJson(TaskStorage):
         """Generate and validated a resource URL."""
         # Resource URL
         resource_url = f"{url}/{json_root}"
-
+        # return 'test'
         # Check by a simple request
         msg = "Check resource_url: " + resource_url
         try:
@@ -151,9 +158,7 @@ class TaskJson(TaskStorage):
             if response.status_code == requests.codes.not_found:
                 msg += " is NOT found"
                 raise TaskStorageException(msg)
-            elif response.status_code == requests.codes.ok:
-                self.__log.debug(msg + " is found")
-            else:
+            elif response.status_code != requests.codes.ok:
                 msg += f" - wrong response code: {response.status_code}"
                 raise TaskStorageException(msg)
 
